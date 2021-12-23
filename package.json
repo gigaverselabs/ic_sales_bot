@@ -1,0 +1,18 @@
+{
+  "license": "MIT",
+  "scripts": {
+  },
+  "dependencies": {
+    "date-fns": "^2.19.0",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
+    "@dfinity/agent": "0.10.1",
+    "@dfinity/auth-client": "0.10.1",
+    "@dfinity/authentication": "0.10.1",
+    "@dfinity/identity": "0.10.1",
+    "@dfinity/principal": "0.10.1",
+    "@dfinity/candid": "0.10.1",
+    "moment": "^2.29.1"
+  }
+}
