@@ -150,7 +150,7 @@ async function main() {
 
   
   let raw_txs = await ic_vault.transactions();
-  let txs = raw_txs.filter(x => x.time > lastUpdate)
+  let txs = raw_txs.filter(x => Number(x.time) > lastUpdate)
 
   if (txs.length > 20) {
     txs.splice(0, txs.length-20);
