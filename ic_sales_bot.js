@@ -61,7 +61,7 @@ const buildMessage = (sale) => {
     )
     .setImage('https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/' + sale.id)
     .setTimestamp(sale.created_date)
-    .setFooter('Sold on Entrepot', 'https://entrepot.app/favicon.png')
+    .setFooter({ text: 'Sold on Entrepot', iconURL: 'https://entrepot.app/favicon.png'})
 }
 
 const tokenIdentifier = (principal, index) => {
@@ -162,8 +162,8 @@ async function main() {
     let raw_txs = await ic_vault.transactions();
     let txs = raw_txs.filter(x => Number(x.time) > lastUpdate)
 
-    if (txs.length > 20) {
-      txs.splice(0, txs.length - 20);
+    if (txs.length > 1) {
+      txs.splice(0, txs.length - 1);
     }
 
     for (var i = 0; i < txs.length; i++) {
@@ -173,12 +173,11 @@ async function main() {
 
       console.log("Sending sale: " + sale.id);
 
-      await channel.send(msg);
+      await channel.send({ embeds: [msg]});
     }
   } catch (e) {
     console.error(e)
   }
-
   working = false;
 }
 
