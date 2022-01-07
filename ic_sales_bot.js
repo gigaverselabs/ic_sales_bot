@@ -173,7 +173,7 @@ async function main() {
 
       console.log("Sending sale: " + sale.id);
 
-      // await channel.send(msg);
+      await channel.send(msg);
     }
   } catch (e) {
     console.error(e)
