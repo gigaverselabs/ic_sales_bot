@@ -24,44 +24,52 @@ const discordSetup = async () => {
 }
 
 const wrap_idl = require('./wrap.idl');
-const { getEnvironmentData } = require('worker_threads');
 const ic_agent = new HttpAgent({ host: process.env.ENDPOINT });
 const ic_vault = Actor.createActor(wrap_idl.IDL, {
   agent: ic_agent,
   canisterId: process.env.ADDRESS,
 });
 const nri = require('./nri').NRI;
-const { start } = require('repl');
 
 const getNri = (id) => {
+  if (nri.length <= id) return null;
+
   return nri[id] * 100 + "%";
 }
 
-const formatDate = (date) => {
-  return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + " " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
-}
+// const formatDate = (date) => {
+//   return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + " " + date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds();
+// }
 
 const buildMessage = (sale) => {
   // if (sale.asset === null) return null;
 
   let date = moment(sale.created_date);
+  let name = process.env.NAME;
+  let image_url = process.env.IMAGE_URL;
+  let nri = getNri(sale.id);
 
-  return new MessageEmbed()
+  let msg = new MessageEmbed()
     .setColor('#0099ff')
-    .setTitle('ICPunk #' + sale.id + ' sold!')
-    .setURL('https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/' + sale.id)
-    .setThumbnail('https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/' + sale.id)
+    .setTitle(name + sale.id + ' sold!')
+    .setURL(image_url + sale.id)
+    .setThumbnail(image_url + sale.id)
     .addFields(
-      { name: 'Name', value: 'ICPunk #' + sale.id },
+      { name: 'Name', value: name + sale.id },
       { name: 'Amount', value: sale.total_price + " ICP" },
-      { name: 'NRI', value: getNri(sale.id) },
       { name: 'Date', value: date.format("yyyy-MM-DD HH:mm:ss") }
       // { name: 'Buyer', value: sale?.winner_account?.address, },
       // { name: 'Seller', value: sale?.seller?.address, },
     )
-    .setImage('https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/' + sale.id)
+    .setImage(image_url + sale.id)
     .setTimestamp(sale.created_date)
     .setFooter({ text: 'Sold on Entrepot', iconURL: 'https://entrepot.app/favicon.png'})
+
+    if (nri !== null) {
+      msg = msg.addFields({name: 'NRI', value: getNri(sale.id)})
+    }
+
+    return msg;
 }
 
 const tokenIdentifier = (principal, index) => {
@@ -173,7 +181,7 @@ async function main() {
 
       console.log("Sending sale: " + sale.id);
 
-      await channel.send({ embeds: [msg]});
+      // await channel.send({ embeds: [msg]});
     }
   } catch (e) {
     console.error(e)
