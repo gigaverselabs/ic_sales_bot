@@ -181,7 +181,7 @@ async function main() {
 
       console.log("Sending sale: " + sale.id);
 
-      // await channel.send({ embeds: [msg]});
+      await channel.send({ embeds: [msg]});
     }
   } catch (e) {
     console.error(e)
